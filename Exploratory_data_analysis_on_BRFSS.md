@@ -2,11 +2,13 @@
 
 ### Load packages
 
-    #install.packages("ggpubr")
-    library(ggplot2)
-    library(dplyr)
-    library("ggpubr")
-    library(data.table)
+``` r
+#install.packages("ggpubr")
+library(ggplot2)
+library(dplyr)
+library("ggpubr")
+library(data.table)
+```
 
 ### Load data
 
@@ -14,8 +16,10 @@ Make sure your data and R Markdown files are in the same directory. When
 loaded your data file will be called `brfss2013`. Delete this note when
 before you submit your work.
 
-    load("brfss2013.RData")
-    #head(brfss2013)
+``` r
+load("brfss2013.RData")
+#head(brfss2013)
+```
 
 ------------------------------------------------------------------------
 
@@ -161,76 +165,86 @@ health status?
 The following are the functions to convert the raw data to desired
 format
 
-    freq_per_month<- function(x){
-      if(100< x & x <200) y <- 4 * (x - 100)
-      else if(200< x & x<300) y <- (x - 200)
-      else
-        y <- 0
-      return(y)
-    }
-    # assuming a person can not go excercise more than 60 times a month
-    filter_larger_freq<- function(x){
-      if (x > 60) 
-        y<- 60
-      else
-        y<-x
-      return (y)
-    }
+``` r
+freq_per_month<- function(x){
+  if(100< x & x <200) y <- 4 * (x - 100)
+  else if(200< x & x<300) y <- (x - 200)
+  else
+    y <- 0
+  return(y)
+}
+# assuming a person can not go excercise more than 60 times a month
+filter_larger_freq<- function(x){
+  if (x > 60) 
+    y<- 60
+  else
+    y<-x
+  return (y)
+}
+```
 
 Preprocess data, extract valid data and remove outliers and analyze the
 data
 
-    valid_all<-select(brfss2013, physhlth,menthlth,exeroft1,exeroft2,strength)
-    valid_all<-valid_all[complete.cases(valid_all),]
+``` r
+valid_all<-select(brfss2013, physhlth,menthlth,exeroft1,exeroft2,strength)
+valid_all<-valid_all[complete.cases(valid_all),]
 
-    valid_all$freqexer<- sapply(valid_all$exeroft1, freq_per_month) + sapply(valid_all$exeroft2, freq_per_month) +sapply(valid_all$strength, freq_per_month)
+valid_all$freqexer<- sapply(valid_all$exeroft1, freq_per_month) + sapply(valid_all$exeroft2, freq_per_month) +sapply(valid_all$strength, freq_per_month)
 
-    #valid_all$freqexer<- sapply(valid_all$freqexer, filter_larger_freq)
+#valid_all$freqexer<- sapply(valid_all$freqexer, filter_larger_freq)
 
-    valid_all<-select(valid_all, physhlth,menthlth,freqexer)
-    valid_all<-valid_all[valid_all$freqexer<=60,]
-    mental_health<-select(valid_all, menthlth,freqexer)
-    mental_health<-group_by(mental_health,menthlth)
+valid_all<-select(valid_all, physhlth,menthlth,freqexer)
+valid_all<-valid_all[valid_all$freqexer<=60,]
+mental_health<-select(valid_all, menthlth,freqexer)
+mental_health<-group_by(mental_health,menthlth)
+```
 
 plot figures
 
-    fig_mental_freqexer <- ggscatter(mental_health, x = "freqexer", y = "menthlth", 
-              add = "reg.line", conf.int = TRUE, 
-              cor.coef = TRUE, cor.method = "pearson",
-              xlab = "freqexer", ylab = "menthlth")
+``` r
+fig_mental_freqexer <- ggscatter(mental_health, x = "freqexer", y = "menthlth", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "freqexer", ylab = "menthlth")
 
-    physical_health<-select(valid_all, physhlth,freqexer)
-    physical_health<-group_by(physical_health,physhlth)
+physical_health<-select(valid_all, physhlth,freqexer)
+physical_health<-group_by(physical_health,physhlth)
 
-    fig_phy_freqexer <- ggscatter(physical_health, x = "freqexer", y = "physhlth", 
-              add = "reg.line", conf.int = TRUE, 
-              cor.coef = TRUE, cor.method = "pearson",
-              xlab = "freqexer", ylab = "physhlth")
+fig_phy_freqexer <- ggscatter(physical_health, x = "freqexer", y = "physhlth", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "freqexer", ylab = "physhlth")
+```
 
 **Visualization research question 1**
 
 -   Fig 1: scatter plot of mental unwellness days and frequency of
     exercise
 
-<!-- -->
-
-    fig_mental_freqexer
+``` r
+fig_mental_freqexer
+```
 
     ## `geom_smooth()` using formula 'y ~ x'
 
-![](_6ee2a5c3100b9237616844a52883e240_intro_data_prob_project_files/figure-markdown_strict/plot%20fig_mental_freqexer-1.png)
+![](_6ee2a5c3100b9237616844a52883e240_intro_data_prob_project_files/figure-markdown_github/plot%20fig_mental_freqexer-1.png)
 - Fig 2: scatter plot of phycial unwellness days and frequency of
 exercise
 
-    fig_phy_freqexer
+``` r
+fig_phy_freqexer
+```
 
     ## `geom_smooth()` using formula 'y ~ x'
 
-![](_6ee2a5c3100b9237616844a52883e240_intro_data_prob_project_files/figure-markdown_strict/plot%20fig_phy_freqexer-1.png)
+![](_6ee2a5c3100b9237616844a52883e240_intro_data_prob_project_files/figure-markdown_github/plot%20fig_phy_freqexer-1.png)
 - Fig-3 Heat map of between number of days mentally not feeling well vs
 frequency of exercise days
 
-    frequency_matrix <- dcast(mental_health, menthlth ~ freqexer)
+``` r
+frequency_matrix <- dcast(mental_health, menthlth ~ freqexer)
+```
 
     ## Warning in dcast(mental_health, menthlth ~ freqexer): The dcast generic
     ## in data.table has been passed a grouped_df and will attempt to redirect
@@ -243,16 +257,20 @@ frequency of exercise days
 
     ## Aggregation function missing: defaulting to length
 
-    x<-mental_health$menthlth
-    y<-mental_health$freqexer
+``` r
+x<-mental_health$menthlth
+y<-mental_health$freqexer
 
-    heatmap(as.matrix(frequency_matrix), Rowv = NA, Colv = NA)
+heatmap(as.matrix(frequency_matrix), Rowv = NA, Colv = NA)
+```
 
-![](_6ee2a5c3100b9237616844a52883e240_intro_data_prob_project_files/figure-markdown_strict/plot%20heatmap_frequency_matrix_mental-1.png)
+![](_6ee2a5c3100b9237616844a52883e240_intro_data_prob_project_files/figure-markdown_github/plot%20heatmap_frequency_matrix_mental-1.png)
 Fig-4 Heat map of between number of days physically not feeling well vs
 number of execercise days
 
-    frequency_matrix <- dcast(physical_health, physhlth ~ freqexer)
+``` r
+frequency_matrix <- dcast(physical_health, physhlth ~ freqexer)
+```
 
     ## Warning in dcast(physical_health, physhlth ~ freqexer): The dcast generic
     ## in data.table has been passed a grouped_df and will attempt to redirect
@@ -265,12 +283,14 @@ number of execercise days
 
     ## Aggregation function missing: defaulting to length
 
-    x<-physical_health$physhlth
-    y<-physical_health$freqexer
+``` r
+x<-physical_health$physhlth
+y<-physical_health$freqexer
 
-    heatmap(as.matrix(frequency_matrix), Rowv = NA, Colv = NA)
+heatmap(as.matrix(frequency_matrix), Rowv = NA, Colv = NA)
+```
 
-![](_6ee2a5c3100b9237616844a52883e240_intro_data_prob_project_files/figure-markdown_strict/plot%20heatmap_frequency_physical_mental-1.png)
+![](_6ee2a5c3100b9237616844a52883e240_intro_data_prob_project_files/figure-markdown_github/plot%20heatmap_frequency_physical_mental-1.png)
 
 -   Discussion:
 -   scatter plot can not show the correlations between the variables.
@@ -296,61 +316,61 @@ number of execercise days
         if overweight people have a higher possibility of getting
         diabetes.
 
-<!-- -->
-
-    convert_2_implied_decimal<- function(x){
-      return (x/100)
-    }
-
-
-    valid_all<-select(brfss2013, sex, X_bmi5, diabete3)
-    valid_all<-valid_all[complete.cases(valid_all),]
-    valid_all<-valid_all[valid_all$diabete3 == 'Yes' | valid_all$diabete3 == 'No',]
-
-    valid_all$X_bmi5<- sapply(valid_all$X_bmi5, convert_2_implied_decimal)
-
-    valid_all$diabete_numeric[valid_all$diabete3 == 'Yes'] <- 1
-    valid_all$diabete_numeric[valid_all$diabete3 == 'No'] <- 2
-
-    male_section <- valid_all[valid_all$sex == 'Male',]
-
-    male_section_positive <- male_section[male_section$diabete_numeric==1,]
-    male_section_negative <- male_section[male_section$diabete_numeric==2,]
-
-    female_section <- valid_all[valid_all$sex == 'Female',]
-
-    female_section_positive <- female_section[female_section$diabete_numeric==1,]
-    female_section_negative <- female_section[female_section$diabete_numeric==2,]
-
-    #https://www.r-graph-gallery.com/190-mirrored-histogram.html
-    #par(mfrow=c(2,1))
-
-    #par(mar=c(0,5,3,3))
-    #hist(male_section_negative$X_bmi5, main="" , xlim=c(0,80), ylab="male non diabete", xlab="", ylim=c(0, 30000) , las=1 , col="tomato3"  , breaks=80)
-
-    #par(mar=c(5,5,0,3))
-    #hist(male_section_positive$X_bmi5, main="" , xlim=c(0,80), ylab="male diabete", xlab="BMI", ylim=c(3000, 0) , las=1 , col="tomato3"  , breaks=80)
+``` r
+convert_2_implied_decimal<- function(x){
+  return (x/100)
+}
 
 
-    # First distribution
-    hist(male_section_negative$X_bmi5, breaks=80, xlim=c(0,80), col=rgb(1,0,0,0.25), xlab="BMI", 
-         ylab="count", main="distribution of BMI of diabetes and non-diabetes" )
+valid_all<-select(brfss2013, sex, X_bmi5, diabete3)
+valid_all<-valid_all[complete.cases(valid_all),]
+valid_all<-valid_all[valid_all$diabete3 == 'Yes' | valid_all$diabete3 == 'No',]
 
-    # Second with add=T to plot on top
-    hist(male_section_positive$X_bmi5, breaks=80, xlim=c(0,80), col=rgb(0,0,1,0.25), add=T)
+valid_all$X_bmi5<- sapply(valid_all$X_bmi5, convert_2_implied_decimal)
 
-    # Third distribution
-    hist(female_section_negative$X_bmi5, breaks=80, xlim=c(0,80), col=rgb(0,1,1,0.25), add=T)
+valid_all$diabete_numeric[valid_all$diabete3 == 'Yes'] <- 1
+valid_all$diabete_numeric[valid_all$diabete3 == 'No'] <- 2
 
-    # Fourth with add=T to plot on top
-    hist(female_section_positive$X_bmi5, breaks=80, xlim=c(0,80), col=rgb(1,0,1,0.25), add=T)
+male_section <- valid_all[valid_all$sex == 'Male',]
+
+male_section_positive <- male_section[male_section$diabete_numeric==1,]
+male_section_negative <- male_section[male_section$diabete_numeric==2,]
+
+female_section <- valid_all[valid_all$sex == 'Female',]
+
+female_section_positive <- female_section[female_section$diabete_numeric==1,]
+female_section_negative <- female_section[female_section$diabete_numeric==2,]
+
+#https://www.r-graph-gallery.com/190-mirrored-histogram.html
+#par(mfrow=c(2,1))
+
+#par(mar=c(0,5,3,3))
+#hist(male_section_negative$X_bmi5, main="" , xlim=c(0,80), ylab="male non diabete", xlab="", ylim=c(0, 30000) , las=1 , col="tomato3"  , breaks=80)
+
+#par(mar=c(5,5,0,3))
+#hist(male_section_positive$X_bmi5, main="" , xlim=c(0,80), ylab="male diabete", xlab="BMI", ylim=c(3000, 0) , las=1 , col="tomato3"  , breaks=80)
 
 
-    # Add legend
-    legend("topright", legend=c("male non diabete","male diabete", "female non diabete", "female diabete"), col=c(rgb(1,0,0,0.25), 
-         rgb(0,0,1,0.25), rgb(0,1,1,0.25), rgb(1,0,1,0.25)), pt.cex=2, pch=15 )
+# First distribution
+hist(male_section_negative$X_bmi5, breaks=80, xlim=c(0,80), col=rgb(1,0,0,0.25), xlab="BMI", 
+     ylab="count", main="distribution of BMI of diabetes and non-diabetes" )
 
-![](_6ee2a5c3100b9237616844a52883e240_intro_data_prob_project_files/figure-markdown_strict/Select%20needed%20data-1.png)
+# Second with add=T to plot on top
+hist(male_section_positive$X_bmi5, breaks=80, xlim=c(0,80), col=rgb(0,0,1,0.25), add=T)
+
+# Third distribution
+hist(female_section_negative$X_bmi5, breaks=80, xlim=c(0,80), col=rgb(0,1,1,0.25), add=T)
+
+# Fourth with add=T to plot on top
+hist(female_section_positive$X_bmi5, breaks=80, xlim=c(0,80), col=rgb(1,0,1,0.25), add=T)
+
+
+# Add legend
+legend("topright", legend=c("male non diabete","male diabete", "female non diabete", "female diabete"), col=c(rgb(1,0,0,0.25), 
+     rgb(0,0,1,0.25), rgb(0,1,1,0.25), rgb(1,0,1,0.25)), pt.cex=2, pch=15 )
+```
+
+![](_6ee2a5c3100b9237616844a52883e240_intro_data_prob_project_files/figure-markdown_github/Select%20needed%20data-1.png)
 
 **Research question 3:**
 
@@ -378,40 +398,50 @@ Ho: Null Hypothesis, there is no statistically significant relationship
 between them. Ha: Alternative Hypothesis, there are significant
 relationship between these variables.
 
-    freq_per_month<- function(x){
-      if(100< x & x <200) y <- 30 * (x - 100)
-      else if(200< x & x<300) y <- 4 * (x - 200)
-      else if(300< x & x<400) y <- (x - 300)
-      else
-        y <- 0
-      return(y)
-    }
+``` r
+freq_per_month<- function(x){
+  if(100< x & x <200) y <- 30 * (x - 100)
+  else if(200< x & x<300) y <- 4 * (x - 200)
+  else if(300< x & x<400) y <- (x - 300)
+  else
+    y <- 0
+  return(y)
+}
+```
 
-    valid_all<-select(brfss2013, educa, ssbfrut2, diabete3)
-    valid_all<-valid_all[complete.cases(valid_all),]
-    #convert to numeric
-    valid_all$educa <- as.numeric(valid_all$educa) 
-    valid_all$freqsuda<- sapply(valid_all$ssbfrut2, freq_per_month)
-    #valid_all<-valid_all[valid_all$diabete3 == 'Yes' | valid_all$diabete3 == 'No',]
-    #valid_all$diabete_numeric[valid_all$diabete3 == 'Yes'] <- 1
-    #valid_all$diabete_numeric[valid_all$diabete3 == 'No'] <- 2
-    valid_all$diabete3 <- as.numeric(valid_all$diabete3)
+``` r
+valid_all<-select(brfss2013, educa, ssbfrut2, diabete3)
+valid_all<-valid_all[complete.cases(valid_all),]
+#convert to numeric
+valid_all$educa <- as.numeric(valid_all$educa) 
+valid_all$freqsuda<- sapply(valid_all$ssbfrut2, freq_per_month)
+#valid_all<-valid_all[valid_all$diabete3 == 'Yes' | valid_all$diabete3 == 'No',]
+#valid_all$diabete_numeric[valid_all$diabete3 == 'Yes'] <- 1
+#valid_all$diabete_numeric[valid_all$diabete3 == 'No'] <- 2
+valid_all$diabete3 <- as.numeric(valid_all$diabete3)
+```
 
-    hist(valid_all$freqsuda, main = "Histogram of number of sweetened suda consumed per month", xlab = "Number of suda Consumed ", ylab = "Frequency",
-    breaks=10000, xlim=c(0,80))
+``` r
+hist(valid_all$freqsuda, main = "Histogram of number of sweetened suda consumed per month", xlab = "Number of suda Consumed ", ylab = "Frequency",
+breaks=10000, xlim=c(0,80))
+```
 
-![](_6ee2a5c3100b9237616844a52883e240_intro_data_prob_project_files/figure-markdown_strict/unnamed-chunk-2-1.png)
+![](_6ee2a5c3100b9237616844a52883e240_intro_data_prob_project_files/figure-markdown_github/unnamed-chunk-2-1.png)
 
-    valid_all_vars <- select(valid_all, educa, freqsuda, diabete3)
-    cor(valid_all_vars)
+``` r
+valid_all_vars <- select(valid_all, educa, freqsuda, diabete3)
+cor(valid_all_vars)
+```
 
     ##               educa    freqsuda   diabete3
     ## educa     1.0000000 -0.10446364 0.11236878
     ## freqsuda -0.1044636  1.00000000 0.04699033
     ## diabete3  0.1123688  0.04699033 1.00000000
 
-    lm <- lm(formula=valid_all_vars$diabete3~valid_all_vars$freqsuda+valid_all_vars$educa, data=valid_all_vars)
-    summary(lm)
+``` r
+lm <- lm(formula=valid_all_vars$diabete3~valid_all_vars$freqsuda+valid_all_vars$educa, data=valid_all_vars)
+summary(lm)
+```
 
     ## 
     ## Call:
