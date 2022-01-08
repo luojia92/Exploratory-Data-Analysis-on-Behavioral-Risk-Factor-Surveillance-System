@@ -228,7 +228,7 @@ fig_mental_freqexer
 
     ## `geom_smooth()` using formula 'y ~ x'
 
-![](_6ee2a5c3100b9237616844a52883e240_intro_data_prob_project_files/figure-markdown_github/plot%20fig_mental_freqexer-1.png)
+![](./figures/plot_fig_mental_freqexer-1.png)
 - Fig 2: scatter plot of phycial unwellness days and frequency of
 exercise
 
@@ -238,7 +238,7 @@ fig_phy_freqexer
 
     ## `geom_smooth()` using formula 'y ~ x'
 
-![](_6ee2a5c3100b9237616844a52883e240_intro_data_prob_project_files/figure-markdown_github/plot%20fig_phy_freqexer-1.png)
+![](./figures/plot_fig_phy_freqexer-1.png)
 - Fig-3 Heat map of between number of days mentally not feeling well vs
 frequency of exercise days
 
@@ -264,7 +264,7 @@ y<-mental_health$freqexer
 heatmap(as.matrix(frequency_matrix), Rowv = NA, Colv = NA)
 ```
 
-![](_6ee2a5c3100b9237616844a52883e240_intro_data_prob_project_files/figure-markdown_github/plot%20heatmap_frequency_matrix_mental-1.png)
+![](./figures/plot_heatmap_frequency_matrix_mental-1.png)
 Fig-4 Heat map of between number of days physically not feeling well vs
 number of execercise days
 
@@ -290,7 +290,7 @@ y<-physical_health$freqexer
 heatmap(as.matrix(frequency_matrix), Rowv = NA, Colv = NA)
 ```
 
-![](_6ee2a5c3100b9237616844a52883e240_intro_data_prob_project_files/figure-markdown_github/plot%20heatmap_frequency_physical_mental-1.png)
+![](./figures/plot_heatmap_frequency_physical_mental-1.png)
 
 -   Discussion:
 -   scatter plot can not show the correlations between the variables.
@@ -370,8 +370,7 @@ legend("topright", legend=c("male non diabete","male diabete", "female non diabe
      rgb(0,0,1,0.25), rgb(0,1,1,0.25), rgb(1,0,1,0.25)), pt.cex=2, pch=15 )
 ```
 
-![](_6ee2a5c3100b9237616844a52883e240_intro_data_prob_project_files/figure-markdown_github/Select%20needed%20data-1.png)
-
+![](./figures/histograms_bmi_diabetes.png)
 **Research question 3:**
 
 -   What is the relationship between education, Sugar-Sweetened Drinks,
@@ -426,7 +425,7 @@ hist(valid_all$freqsuda, main = "Histogram of number of sweetened suda consumed 
 breaks=10000, xlim=c(0,80))
 ```
 
-![](_6ee2a5c3100b9237616844a52883e240_intro_data_prob_project_files/figure-markdown_github/unnamed-chunk-2-1.png)
+![](./figures/histograms_soda.png)
 
 ``` r
 valid_all_vars <- select(valid_all, educa, freqsuda, diabete3)
