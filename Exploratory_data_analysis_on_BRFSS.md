@@ -425,7 +425,7 @@ hist(valid_all$freqsuda, main = "Histogram of number of sweetened suda consumed 
 breaks=10000, xlim=c(0,80))
 ```
 
-![](./figures/histograms_soda.png)
+![](./figures/histogram_soda.png)
 
 ``` r
 valid_all_vars <- select(valid_all, educa, freqsuda, diabete3)
